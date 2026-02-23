@@ -10,7 +10,6 @@ interface VideoInfo {
   duration: number
   videoUrl: string
   audioUrl: string
-  videoNoWatermark: string
 }
 
 export default function Home() {
@@ -60,7 +59,6 @@ export default function Home() {
       const ext = type === 'audio' ? 'mp3' : 'mp4'
       const filename = `tiktok-${type}-${Date.now()}.${ext}`
 
-      // Use proxy to force download
       const res = await fetch(`/api/proxy?url=${encodeURIComponent(downloadUrl)}`)
       if (!res.ok) throw new Error('Download gagal')
       const blob = await res.blob()
@@ -83,31 +81,27 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-      {/* Background decoration */}
       <div className={styles.bgGlow1} />
       <div className={styles.bgGlow2} />
 
-      {/* Header */}
       <header className={styles.header}>
         <div className={styles.logo}>
           <span className={styles.logoIcon}>▶</span>
           <span>TikSave</span>
         </div>
-        <div className={styles.badge}>Free & No Watermark</div>
+        <div className={styles.badge}>Free Downloader</div>
       </header>
 
-      {/* Hero */}
       <section className={styles.hero}>
         <div className={styles.heroTag}>✦ TikTok Downloader</div>
         <h1 className={styles.heroTitle}>
           Download TikTok<br />
-          <span className={styles.heroAccent}>Tanpa Watermark</span>
+          <span className={styles.heroAccent}>Mudah & Cepat</span>
         </h1>
         <p className={styles.heroSub}>
-          Paste link TikTok, download video HD, audio MP3 — gratis & cepat.
+          Paste link TikTok, download video atau MP3 — gratis tanpa ribet.
         </p>
 
-        {/* Input form */}
         <form onSubmit={handleFetch} className={styles.form}>
           <div className={styles.inputWrap}>
             <span className={styles.inputIcon}>🔗</span>
@@ -129,15 +123,10 @@ export default function Home() {
             disabled={loading || !url.trim()}
             className={styles.submitBtn}
           >
-            {loading ? (
-              <span className={styles.spinner} />
-            ) : (
-              'Download ↓'
-            )}
+            {loading ? <span className={styles.spinner} /> : 'Download ↓'}
           </button>
         </form>
 
-        {/* Error */}
         {error && (
           <div className={styles.errorBox}>
             <span>⚠</span> {error}
@@ -145,12 +134,10 @@ export default function Home() {
         )}
       </section>
 
-      {/* Result */}
       {result && (
         <section className={styles.resultSection}>
           <div className={styles.resultCard}>
             <div className={styles.resultLeft}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`/api/proxy?url=${encodeURIComponent(result.thumbnail)}`}
                 alt="thumbnail"
@@ -166,24 +153,14 @@ export default function Home() {
               <p className={styles.videoTitle}>{result.title}</p>
 
               <div className={styles.downloadButtons}>
-                {result.videoNoWatermark && (
-                  <button
-                    className={`${styles.dlBtn} ${styles.dlBtnPrimary}`}
-                    onClick={() => handleDownload(result.videoNoWatermark, 'video-hd')}
-                    disabled={!!downloading}
-                  >
-                    {downloading === 'video-hd' ? <span className={styles.spinnerSm} /> : '↓'}
-                    Video HD (No Watermark)
-                  </button>
-                )}
                 {result.videoUrl && (
                   <button
-                    className={`${styles.dlBtn} ${styles.dlBtnSecondary}`}
+                    className={`${styles.dlBtn} ${styles.dlBtnPrimary}`}
                     onClick={() => handleDownload(result.videoUrl, 'video')}
                     disabled={!!downloading}
                   >
                     {downloading === 'video' ? <span className={styles.spinnerSm} /> : '↓'}
-                    Video Standard
+                    Download Video
                   </button>
                 )}
                 {result.audioUrl && (
@@ -193,7 +170,7 @@ export default function Home() {
                     disabled={!!downloading}
                   >
                     {downloading === 'audio' ? <span className={styles.spinnerSm} /> : '♫'}
-                    Audio MP3
+                    Download MP3
                   </button>
                 )}
               </div>
@@ -202,42 +179,8 @@ export default function Home() {
         </section>
       )}
 
-      {/* Features */}
-      <section className={styles.features}>
-        {[
-          { icon: '⚡', title: 'Super Cepat', desc: 'Proses download dalam hitungan detik' },
-          { icon: '🚫', title: 'No Watermark', desc: 'Video bersih tanpa logo TikTok' },
-          { icon: '🎵', title: 'Extract Audio', desc: 'Download musik sebagai file MP3' },
-          { icon: '🔒', title: 'Aman & Gratis', desc: 'Tidak perlu login atau install apapun' },
-        ].map(f => (
-          <div key={f.title} className={styles.featureCard}>
-            <span className={styles.featureIcon}>{f.icon}</span>
-            <h3>{f.title}</h3>
-            <p>{f.desc}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* How to use */}
-      <section className={styles.howTo}>
-        <h2 className={styles.sectionTitle}>Cara Pakai</h2>
-        <div className={styles.steps}>
-          {[
-            { n: '01', text: 'Buka TikTok, pilih video yang ingin didownload' },
-            { n: '02', text: 'Tap "Share" lalu "Copy Link" untuk menyalin URL' },
-            { n: '03', text: 'Paste URL di kolom di atas, klik Download' },
-            { n: '04', text: 'Pilih format yang diinginkan dan simpan!' },
-          ].map(s => (
-            <div key={s.n} className={styles.step}>
-              <span className={styles.stepNum}>{s.n}</span>
-              <p>{s.text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <footer className={styles.footer}>
-        <p>© 2024 TikSave. Dibuat untuk kemudahan. <a href="/api-docs" style={{ color: 'var(--accent)', textDecoration: 'none' }}>API Docs</a></p>
+        <p>© 2024 TikSave. <a href="/api-docs" style={{ color: 'var(--accent)', textDecoration: 'none' }}>API Docs</a></p>
       </footer>
     </main>
   )

@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export const runtime = 'edge'
 
-// Fungsi untuk menangani Preflight Request (CORS)
 export async function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
@@ -37,11 +36,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'URL tidak valid. Masukkan link TikTok yang benar.' }, { status: 400 })
     }
 
-    // Gunakan tikwm.com API
     const apiUrl = 'https://tikwm.com/api/'
     const formData = new URLSearchParams()
     formData.append('url', trimmedUrl)
-    formData.append('hd', '1')
 
     const response = await fetch(apiUrl, {
       method: 'POST',
@@ -70,10 +67,8 @@ export async function POST(req: NextRequest) {
       thumbnail: video.cover || video.origin_cover || '',
       duration: video.duration || 0,
       videoUrl: video.play || '',
-      videoNoWatermark: video.hdplay || video.play || '',
       audioUrl: video.music || video.music_info?.play || '',
     }, {
-      // Tambahkan header CORS pada response sukses
       headers: {
         'Access-Control-Allow-Origin': '*',
       }
