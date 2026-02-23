@@ -237,7 +237,7 @@ export default function Home() {
       </section>
 
       <footer className={styles.footer}>
-        <p>© 2024 TikSave. Dibuat untuk kemudahan. Tidak berafiliasi dengan TikTok.</p>
+        <p>© 2024 TikSave. Dibuat untuk kemudahan. <a href="/api-docs" style={{ color: 'var(--accent)', textDecoration: 'none' }}>API Docs</a></p>
       </footer>
     </main>
   )

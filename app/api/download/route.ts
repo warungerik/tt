@@ -2,6 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export const runtime = 'edge'
 
+// Fungsi untuk menangani Preflight Request (CORS)
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  })
+}
+
 function isValidTikTokUrl(url: string): boolean {
   try {
     const u = new URL(url)
@@ -25,7 +37,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'URL tidak valid. Masukkan link TikTok yang benar.' }, { status: 400 })
     }
 
-    // Use tikwm.com API (free, reliable, no watermark)
+    // Gunakan tikwm.com API
     const apiUrl = 'https://tikwm.com/api/'
     const formData = new URLSearchParams()
     formData.append('url', trimmedUrl)
@@ -60,9 +72,17 @@ export async function POST(req: NextRequest) {
       videoUrl: video.play || '',
       videoNoWatermark: video.hdplay || video.play || '',
       audioUrl: video.music || video.music_info?.play || '',
+    }, {
+      // Tambahkan header CORS pada response sukses
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+      }
     })
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : 'Terjadi kesalahan server'
-    return NextResponse.json({ error: message }, { status: 500 })
+    return NextResponse.json({ error: message }, {
+      status: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' }
+    })
   }
 }
